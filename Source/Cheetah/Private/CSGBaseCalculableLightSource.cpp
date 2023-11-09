@@ -55,6 +55,9 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
 
     float IlluminationLevel = 0.f;
 
+    float IlluminationLevelByViewAngle = 0.f;
+    float IlluminationLevelByViewAngleCoeff = 0.f;
+
     FHitResult HitResult;
     FCollisionQueryParams CollisionParams;
     CollisionParams.AddIgnoredActor(this);
@@ -72,12 +75,22 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
                     FMath::Acos(
                         FVector::DotProduct(
                             GetActorForwardVector(), (HitResult.Location - GetActorLocation()).GetSafeNormal())));
-                if (Angle <= ViewAngle / 2.f)
+                if (Angle <= ViewAngle / 2.f && HitResult.Distance <= EdgeCollisionComponent->GetUnscaledSphereRadius())
                 {
                     float IlluminationLevelDelta = 1.f / ImportantBonesLocation.Num();
-                    if (!IlluminationIsConst && ViewAngleToCoeffCurve && DistanceToCoeffCurve)
+                    
+                    if (!IlluminationIsConst && ViewAngleToCoeffCurve && DistanceToCoeffCurve &&
+                        EdgeCollisionComponent->GetUnscaledSphereRadius() > 0.0f && ViewAngle > 0.0f)
                     {
-                        IlluminationLevelDelta *= ViewAngleToCoeffCurve->GetFloatValue(Angle) * DistanceToCoeffCurve->GetFloatValue(HitResult.Distance);
+                        float DistanceCoeff = DistanceToCoeffCurve->GetFloatValue(HitResult.Distance / EdgeCollisionComponent->GetUnscaledSphereRadius());
+                        IlluminationLevelDelta *= DistanceCoeff;
+
+                        float AngleDistanceCoeff = ViewAngleToCoeffCurve->GetFloatValue(Angle / (ViewAngle / 2.f));
+                        if (AngleDistanceCoeff > IlluminationLevelByViewAngle)
+                        {
+                            IlluminationLevelByViewAngle = AngleDistanceCoeff;
+                            IlluminationLevelByViewAngleCoeff = 1.f - DistanceCoeff;
+                        }
                     }
                     IlluminationLevel += IlluminationLevelDelta;
 
@@ -88,6 +101,11 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
                 }
             }
         }
+    }
+
+    if (!IlluminationIsConst)
+    {
+        IlluminationLevel = ((IlluminationLevel * IlluminationLevelByViewAngle) * IlluminationLevelByViewAngleCoeff + IlluminationLevel) / (1.f + IlluminationLevelByViewAngleCoeff);
     }
 
     return FMath::Clamp(IlluminationLevel, 0.f, 1.f);

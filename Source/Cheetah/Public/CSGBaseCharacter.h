@@ -39,6 +39,9 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsInCover = false;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FName> LightSocketNames;
 

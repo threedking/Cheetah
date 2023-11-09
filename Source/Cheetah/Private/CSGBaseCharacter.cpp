@@ -12,7 +12,7 @@ ACSGBaseCharacter::ACSGBaseCharacter()
 
 float ACSGBaseCharacter::GetFullLightIllumination()
 {
-    return FMath::Clamp(GetIlluminationByLightSources() + GetIlluminationByGlobalLighth(), 0.f, 1.f);
+    return IsInCover ? 0.f : FMath::Clamp(GetIlluminationByLightSources() + GetIlluminationByGlobalLighth(), 0.f, 1.f);
 }
 float ACSGBaseCharacter::GetIlluminationByLightSources()
 {
@@ -23,7 +23,7 @@ float ACSGBaseCharacter::GetIlluminationByLightSources()
         IlluminationLevel += LightSource->GetIlluminationLevel(this);
     }
 
-    return FMath::Clamp(IlluminationLevel, 0.f, 1.f);
+    return IsInCover ? 0.f : FMath::Clamp(IlluminationLevel, 0.f, 1.f);
 }
 
 void ACSGBaseCharacter::AddObservingLightSource(ACSGBaseCalculableLightSource* LightSource)

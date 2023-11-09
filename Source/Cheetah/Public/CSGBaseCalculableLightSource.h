@@ -18,7 +18,7 @@ class CHEETAH_API ACSGBaseCalculableLightSource : public AActor
 public:
 	ACSGBaseCalculableLightSource();
 
-	virtual void BeginPlay() override;
+	virtual void BeginPlay();
 
 	float GetIlluminationLevel(ACSGBaseCharacter* Target);
 
@@ -27,7 +27,7 @@ public:
 
 protected:
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USphereComponent* EdgeCollisionComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Illumination")
