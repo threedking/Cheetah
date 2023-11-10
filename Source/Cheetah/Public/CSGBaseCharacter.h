@@ -15,6 +15,8 @@ class CHEETAH_API ACSGBaseCharacter : public ACharacter
 
 public:
 	ACSGBaseCharacter();
+	
+	virtual void BeginPlay();
 
 	void AddObservingLightSource(ACSGBaseCalculableLightSource* LightSource);
 	void RemoveObservingLightSource(ACSGBaseCalculableLightSource* LightSource);
@@ -37,10 +39,25 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	bool IsDrawDebug();
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsRun(bool NewIsRun);
+
+	UFUNCTION(BlueprintCallable)
+	float GetIsRun();
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsInCover = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	bool IsRun = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float MaxWalkSpeed = 200.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float MaxRunSpeed = 300.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FName> LightSocketNames;

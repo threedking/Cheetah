@@ -21,5 +21,5 @@ public:
 protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    FBlackboardKeySelector AimLocationKey;
+    FBlackboardKeySelector LocationKey;
 };

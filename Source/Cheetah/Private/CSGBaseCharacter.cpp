@@ -4,10 +4,18 @@
 #include "CSGBaseCharacter.h"
 
 #include "CSGBaseCalculableLightSource.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ACSGBaseCharacter::ACSGBaseCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
+}
+
+void ACSGBaseCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    SetIsRun(false);
 }
 
 float ACSGBaseCharacter::GetFullLightIllumination()
@@ -55,4 +63,16 @@ TArray<FVector> ACSGBaseCharacter::GetImportantBonesLocation()
     }
 
     return ImportantBoneLocations;
+}
+
+void ACSGBaseCharacter::SetIsRun(bool NewIsRun)
+{
+    IsRun = NewIsRun;
+    UCharacterMovementComponent* Movement = GetCharacterMovement();
+    Movement->MaxWalkSpeed = IsRun ? MaxRunSpeed : MaxWalkSpeed;
+}
+
+float ACSGBaseCharacter::GetIsRun()
+{
+    return IsRun;
 }

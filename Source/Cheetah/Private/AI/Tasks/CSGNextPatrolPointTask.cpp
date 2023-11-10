@@ -4,8 +4,9 @@
 #include "AI/Tasks/CSGNextPatrolPointTask.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
-#include "AIController.h"
 #include "NavigationSystem.h"
+#include "AI/CSGAIController.h"
+#include "AI/CSGAICharacter.h"
 
 
 UCSGNextPatrolPointTask::UCSGNextPatrolPointTask()
@@ -15,24 +16,26 @@ UCSGNextPatrolPointTask::UCSGNextPatrolPointTask()
 
 EBTNodeResult::Type UCSGNextPatrolPointTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    AController* Controller = OwnerComp.GetAIOwner();
+    AAIController* Controller = OwnerComp.GetAIOwner();
     UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
     if (!Controller || !Blackboard) return EBTNodeResult::Failed;
 
-    APawn* Pawn = Controller->GetPawn();
-    if (!Pawn)  return EBTNodeResult::Failed;
-
-    UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(Pawn);
+    ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(Controller->GetPawn());
+    if (!AICharacter)  return EBTNodeResult::Failed;
+    
+    /*
+    UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(AICharacter);
     if (!NavSys) return EBTNodeResult::Failed;
 
     FNavLocation NavLocation;
 
-    FVector Location = Pawn->GetActorLocation();
+    FVector Location = AICharacter->GetActorLocation();
         
     bool Found = NavSys->GetRandomReachablePointInRadius(Location, 1000.f, NavLocation); // temporary random
     if (!Found) return EBTNodeResult::Failed;
+    */
 
-    Blackboard->SetValueAsVector(AimLocationKey.SelectedKeyName, NavLocation.Location);
+    Blackboard->SetValueAsVector(LocationKey.SelectedKeyName, AICharacter->GetNextPatrolLocation());
 
     return EBTNodeResult::Succeeded;
 }

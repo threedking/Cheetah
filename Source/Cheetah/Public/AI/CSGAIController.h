@@ -8,6 +8,14 @@
 
 class UCSGAIPerceptionComponent;
 
+UENUM(BlueprintType)
+enum class EAIMood : uint8
+{
+	Calm,
+	Suspicious,
+	Angry
+};
+
 UCLASS()
 class CHEETAH_API ACSGAIController : public AAIController
 {
