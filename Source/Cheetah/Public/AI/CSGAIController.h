@@ -6,12 +6,19 @@
 #include "AIController.h"
 #include "CSGAIController.generated.h"
 
-/**
- * 
- */
+class UCSGAIPerceptionComponent;
+
 UCLASS()
 class CHEETAH_API ACSGAIController : public AAIController
 {
 	GENERATED_BODY()
 	
+public:
+	ACSGAIController();
+
+protected:
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Components")
+	UCSGAIPerceptionComponent* CSGAIPerceptionComponent;
+
+	virtual void OnPossess(APawn* InPawn) override;
 };
