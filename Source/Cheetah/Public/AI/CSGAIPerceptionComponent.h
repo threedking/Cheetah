@@ -8,6 +8,7 @@
 #include "CSGAIPerceptionComponent.generated.h"
 
 class ACSGBaseCharacter;
+struct FActorPerceptionUpdateInfo;
 
 UCLASS()
 class CHEETAH_API UCSGAIPerceptionComponent : public UAIPerceptionComponent
@@ -15,14 +16,28 @@ class CHEETAH_API UCSGAIPerceptionComponent : public UAIPerceptionComponent
 	GENERATED_BODY()
 	
 public:
-	ACSGBaseCharacter* GetEnemy();
-
 	float CalculateEnemyDetectionLevel();
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	FBlackboardKeySelector EnemyActorKey;
+	virtual void PostInitProperties() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	FBlackboardKeySelector EnemyDetectionLevelKey;
+	void ClearAwareness();
+
+	void AddSuspiciousAwareness(float AdditionalAwareness);
+
+	void AddAngryAwareness(float AdditionalAwareness);
+
+	float GetSuspiciousAwareness();
+
+	float GetAngryAwareness();
+
+	ACSGBaseCharacter* GetEnemy();
+
+protected:
+	ACSGBaseCharacter* Player;
+
+	float SuspiciousAwareness = 0.f;
+	float AngryAwareness = 0.f;
+
+	UFUNCTION()
+	void PerceptionUpdated(const FActorPerceptionUpdateInfo& UpdateInfo);
 };

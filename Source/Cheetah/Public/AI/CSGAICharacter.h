@@ -28,6 +28,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
 	bool IsPatrolingForward = true;
 
+	UFUNCTION(BlueprintCallable)
+	float GetEnemyDetectionLevel(ACSGBaseCharacter* EnemyCharacter);
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnemyActor(AActor* Enemy);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
 	USplineComponent* PatrolSplineComponent;

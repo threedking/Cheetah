@@ -4,18 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "CSGNextPatrolPointTask.generated.h"
+#include "CSGClearSuspiciousLocationTask.generated.h"
 
 UCLASS()
-class CHEETAH_API UCSGNextPatrolPointTask : public UBTTaskNode
+class CHEETAH_API UCSGClearSuspiciousLocationTask : public UBTTaskNode
 {
 	GENERATED_BODY()
+
 public:
-    UCSGNextPatrolPointTask();
+    UCSGClearSuspiciousLocationTask();
 
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    FBlackboardKeySelector LocationKey;
+    FBlackboardKeySelector SuspiciousLocationKey;
 };

@@ -1,20 +1,18 @@
 // Copyright Threedking. All Rights Reserved.
 
 
-#include "AI/Tasks/CSGNextPatrolPointTask.h"
+#include "AI/Tasks/CSGCalmDownTask.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
-#include "NavigationSystem.h"
 #include "AI/CSGAIController.h"
 #include "AI/CSGAICharacter.h"
 
-
-UCSGNextPatrolPointTask::UCSGNextPatrolPointTask()
+UCSGCalmDownTask::UCSGCalmDownTask()
 {
-	NodeName = "Next Patrol Point";
+    NodeName = "Calm Down";
 }
 
-EBTNodeResult::Type UCSGNextPatrolPointTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UCSGCalmDownTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     AAIController* Controller = OwnerComp.GetAIOwner();
     UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
@@ -22,8 +20,10 @@ EBTNodeResult::Type UCSGNextPatrolPointTask::ExecuteTask(UBehaviorTreeComponent&
 
     ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(Controller->GetPawn());
     if (!AICharacter)  return EBTNodeResult::Failed;
- 
-    Blackboard->SetValueAsVector(LocationKey.SelectedKeyName, AICharacter->GetNextPatrolLocation());
+
+    Blackboard->SetValueAsEnum(Mood.SelectedKeyName, static_cast<uint8>(EAIMood::Calm));
+
+    AICharacter->SetIsRun(false);
 
     return EBTNodeResult::Succeeded;
 }

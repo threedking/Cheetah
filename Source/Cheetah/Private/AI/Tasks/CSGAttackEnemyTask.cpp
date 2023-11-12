@@ -1,20 +1,18 @@
 // Copyright Threedking. All Rights Reserved.
 
 
-#include "AI/Tasks/CSGNextPatrolPointTask.h"
+#include "AI/Tasks/CSGAttackEnemyTask.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
-#include "NavigationSystem.h"
 #include "AI/CSGAIController.h"
 #include "AI/CSGAICharacter.h"
 
-
-UCSGNextPatrolPointTask::UCSGNextPatrolPointTask()
+UCSGAttackEnemyTask::UCSGAttackEnemyTask()
 {
-	NodeName = "Next Patrol Point";
+	NodeName = "Attack Enemy";
 }
 
-EBTNodeResult::Type UCSGNextPatrolPointTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UCSGAttackEnemyTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     AAIController* Controller = OwnerComp.GetAIOwner();
     UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
@@ -22,8 +20,11 @@ EBTNodeResult::Type UCSGNextPatrolPointTask::ExecuteTask(UBehaviorTreeComponent&
 
     ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(Controller->GetPawn());
     if (!AICharacter)  return EBTNodeResult::Failed;
- 
-    Blackboard->SetValueAsVector(LocationKey.SelectedKeyName, AICharacter->GetNextPatrolLocation());
+
+    ACSGBaseCharacter* EnemyCharacter = Cast<ACSGBaseCharacter>(Blackboard->GetValueAsObject(EnemyActorKey.SelectedKeyName));
+    if (!EnemyCharacter) return EBTNodeResult::Failed;
+    
+    AICharacter->AttackEnemyActor(EnemyCharacter);
 
     return EBTNodeResult::Succeeded;
 }

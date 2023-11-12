@@ -52,3 +52,21 @@ FVector ACSGAICharacter::GetNextPatrolLocation()
 
     return NextPatrolLocation;
 }
+
+float ACSGAICharacter::GetEnemyDetectionLevel(ACSGBaseCharacter* EnemyCharacter)
+{
+    if (!EnemyCharacter) return 0.f;
+
+    float DetectionLevel = 0.f;
+
+    float IlluminationLevel = EnemyCharacter->GetFullLightIllumination();
+
+    DetectionLevel = IlluminationLevel;
+
+    return DetectionLevel;
+}
+
+void ACSGAICharacter::AttackEnemyActor(AActor* Enemy)
+{
+    
+}

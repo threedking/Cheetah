@@ -15,8 +15,17 @@ public:
     UCSGDetectEnemyService();
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    FBlackboardKeySelector EnemyActorKey;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		FBlackboardKeySelector Suspiciouslocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		FBlackboardKeySelector SuspiciousActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		FBlackboardKeySelector EnemyActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		FBlackboardKeySelector Mood;
 
     virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 };
