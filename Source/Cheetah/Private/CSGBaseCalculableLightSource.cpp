@@ -6,17 +6,22 @@
 #include "Components/SphereComponent.h"
 #include "Curves/CurveFloat.h"
 #include "CSGBaseCharacter.h"
+#include "AI/CSGAICharacter.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
 
 ACSGBaseCalculableLightSource::ACSGBaseCalculableLightSource()
 {
  	PrimaryActorTick.bCanEverTick = true;
-
     EdgeCollisionComponent = CreateDefaultSubobject<USphereComponent>("EdgeSphereComponent");
     EdgeCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     EdgeCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     SetRootComponent(EdgeCollisionComponent);
+
+    DamageCollisionComponent = CreateDefaultSubobject<USphereComponent>("DamageSphereComponent");
+    DamageCollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    DamageCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    DamageCollisionComponent->SetupAttachment(GetRootComponent());
 
     EdgeCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ACSGBaseCalculableLightSource::EdgeBeginOverlap);
     EdgeCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ACSGBaseCalculableLightSource::EdgeEndOverlap);
@@ -38,7 +43,8 @@ void ACSGBaseCalculableLightSource::BeginPlay()
         for (AActor*& FoundActor : FoundActors)
         {
             ACSGBaseCharacter* BaseCharacter = Cast<ACSGBaseCharacter>(FoundActor);
-            if (BaseCharacter)
+            ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(FoundActor);
+            if (BaseCharacter && !AICharacter)
             {
                 BaseCharacter->AddObservingLightSource(this);
             }
@@ -50,9 +56,6 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
 {
     if (!GetWorld()) return 0.f;
 
-    ACSGBaseCharacter* TargetCharacter = Cast<ACSGBaseCharacter>(Target);
-    if (!TargetCharacter) return 0.f;
-
     float IlluminationLevel = 0.f;
 
     float IlluminationLevelByViewAngle = 0.f;
@@ -62,7 +65,7 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
     FCollisionQueryParams CollisionParams;
     CollisionParams.AddIgnoredActor(this);
 
-    const TArray<FVector> ImportantBonesLocation = TargetCharacter->GetImportantBonesLocation();
+    const TArray<FVector> ImportantBonesLocation = Target->GetImportantBonesLocation();
 
     for (FVector ImportantBoneLocation : ImportantBonesLocation)
     {
@@ -94,7 +97,7 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
                     }
                     IlluminationLevel += IlluminationLevelDelta;
 
-                    if (TargetCharacter->IsDrawDebug())
+                    if (Target->IsDrawDebug())
                     {
                         DrawDebugLine(GetWorld(), GetActorLocation(), ImportantBoneLocation, FColor::Yellow);
                     }
@@ -116,6 +119,9 @@ void ACSGBaseCalculableLightSource::EdgeBeginOverlap(UPrimitiveComponent* Overla
     ACSGBaseCharacter* BaseCharacter = Cast<ACSGBaseCharacter>(OtherActor);
     if (!BaseCharacter) return;
 
+    ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(OtherActor);
+    if (AICharacter) return;
+
     BaseCharacter->AddObservingLightSource(this);
 }
 
@@ -123,6 +129,9 @@ void ACSGBaseCalculableLightSource::EdgeEndOverlap(UPrimitiveComponent* Overlapp
 {
     ACSGBaseCharacter* BaseCharacter = Cast<ACSGBaseCharacter>(OtherActor);
     if (!BaseCharacter) return;
+
+    ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(OtherActor);
+    if (AICharacter) return;
 
     BaseCharacter->RemoveObservingLightSource(this);
 }

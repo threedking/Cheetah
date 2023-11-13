@@ -26,8 +26,10 @@ public:
 
 	void AddAngryAwareness(float AdditionalAwareness);
 
+	UFUNCTION(BlueprintCallable)
 	float GetSuspiciousAwareness();
 
+	UFUNCTION(BlueprintCallable)
 	float GetAngryAwareness();
 
 	ACSGBaseCharacter* GetEnemy();

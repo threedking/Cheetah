@@ -30,6 +30,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USphereComponent* EdgeCollisionComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	USphereComponent* DamageCollisionComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Illumination")
 	bool IlluminationIsConst = true;
 
