@@ -26,7 +26,7 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Components")
-	UCSGAIPerceptionComponent* CSGAIPerceptionComponent;
+	TObjectPtr<UCSGAIPerceptionComponent> CSGAIPerceptionComponent;
 
 	virtual void OnPossess(APawn* InPawn) override;
 };

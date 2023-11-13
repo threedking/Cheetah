@@ -22,6 +22,11 @@ ACSGAICharacter::ACSGAICharacter()
     PatrolSplineComponent = CreateDefaultSubobject<USplineComponent>("Patrol Spline Component");
 }
 
+bool ACSGAICharacter::IsPlayer()
+{
+    return false;
+}
+
 FVector ACSGAICharacter::GetNextPatrolLocation()
 {
     FVector NextPatrolLocation = GetActorLocation();
@@ -56,12 +61,7 @@ FVector ACSGAICharacter::GetNextPatrolLocation()
 
     return NextPatrolLocation;
 }
-/*
-void ACSGAICharacter::AttackEnemyActor(AActor* Enemy)
-{
-    
-}
-*/
+
 float ACSGAICharacter::GetEnemyDetectionLevel(ACSGBaseCharacter* EnemyCharacter)
 {
     if (!EnemyCharacter) return 0.f;

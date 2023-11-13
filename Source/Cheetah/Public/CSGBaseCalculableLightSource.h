@@ -28,19 +28,19 @@ public:
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USphereComponent* EdgeCollisionComponent;
+	TObjectPtr<USphereComponent> EdgeCollisionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USphereComponent* DamageCollisionComponent;
+	TObjectPtr<USphereComponent> DamageCollisionComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Illumination")
 	bool IlluminationIsConst = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Illumination", meta = (EditCondition = "!IlluminationIsConst"))
-	UCurveFloat* ViewAngleToCoeffCurve;
+	TObjectPtr<UCurveFloat> ViewAngleToCoeffCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Illumination", meta = (EditCondition = "!IlluminationIsConst"))
-	UCurveFloat* DistanceToCoeffCurve;
+	TObjectPtr<UCurveFloat> DistanceToCoeffCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Illumination")
 	bool IsTurnedOn = true;

@@ -21,15 +21,15 @@ public:
 	FVector GetNextPatrolLocation();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
-	UBehaviorTree* BehaviorTreeAsset;
+	TObjectPtr<UBehaviorTree> BehaviorTreeAsset;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI Patrol")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Patrol")
 	bool IsPatroling = true;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI Patrol")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Patrol")
 	bool IsLoopPatrol = false;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI Patrol")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Patrol")
 	bool IsPatrolingForward = true;
 
 	UFUNCTION(BlueprintCallable)
@@ -37,6 +37,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void AttackEnemyActor(AActor* Enemy);
+
+	virtual bool IsPlayer() override;
 
 protected:
 
@@ -68,13 +70,13 @@ protected:
 	float MainCoeffDetection = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Detection")
-	UCurveFloat* ViewAngleToCoeffCurve;
+	TObjectPtr<UCurveFloat> ViewAngleToCoeffCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Detection")
-	UCurveFloat* DistanceToCoeffCurve;
+	TObjectPtr<UCurveFloat> DistanceToCoeffCurve;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
-	USplineComponent* PatrolSplineComponent;
+	TObjectPtr<USplineComponent> PatrolSplineComponent;
 
 	int32 CurrentPatrolPointIndex = 0;
 

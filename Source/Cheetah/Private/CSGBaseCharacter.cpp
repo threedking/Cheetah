@@ -72,7 +72,13 @@ void ACSGBaseCharacter::SetIsRun(bool NewIsRun)
     Movement->MaxWalkSpeed = IsRun ? MaxRunSpeed : MaxWalkSpeed;
 }
 
-float ACSGBaseCharacter::GetIsRun()
+bool ACSGBaseCharacter::GetIsRun()
 {
     return IsRun;
 }
+
+bool ACSGBaseCharacter::IsPlayer()
+{
+    return true;
+}
+

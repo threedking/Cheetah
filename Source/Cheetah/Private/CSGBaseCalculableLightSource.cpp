@@ -43,8 +43,7 @@ void ACSGBaseCalculableLightSource::BeginPlay()
         for (AActor*& FoundActor : FoundActors)
         {
             ACSGBaseCharacter* BaseCharacter = Cast<ACSGBaseCharacter>(FoundActor);
-            ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(FoundActor);
-            if (BaseCharacter && !AICharacter)
+            if (BaseCharacter && BaseCharacter->IsPlayer())
             {
                 BaseCharacter->AddObservingLightSource(this);
             }
@@ -54,7 +53,7 @@ void ACSGBaseCalculableLightSource::BeginPlay()
 
 float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Target)
 {
-    if (!GetWorld()) return 0.f;
+    if (!GetWorld() || !Target) return 0.f;
 
     float IlluminationLevel = 0.f;
 
@@ -117,10 +116,7 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
 void ACSGBaseCalculableLightSource::EdgeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     ACSGBaseCharacter* BaseCharacter = Cast<ACSGBaseCharacter>(OtherActor);
-    if (!BaseCharacter) return;
-
-    ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(OtherActor);
-    if (AICharacter) return;
+    if (!BaseCharacter || !BaseCharacter->IsPlayer()) return;
 
     BaseCharacter->AddObservingLightSource(this);
 }
@@ -128,10 +124,7 @@ void ACSGBaseCalculableLightSource::EdgeBeginOverlap(UPrimitiveComponent* Overla
 void ACSGBaseCalculableLightSource::EdgeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
     ACSGBaseCharacter* BaseCharacter = Cast<ACSGBaseCharacter>(OtherActor);
-    if (!BaseCharacter) return;
-
-    ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(OtherActor);
-    if (AICharacter) return;
+    if (!BaseCharacter || !BaseCharacter->IsPlayer()) return;
 
     BaseCharacter->RemoveObservingLightSource(this);
 }

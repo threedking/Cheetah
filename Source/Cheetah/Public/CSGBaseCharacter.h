@@ -43,7 +43,10 @@ public:
 	void SetIsRun(bool NewIsRun);
 
 	UFUNCTION(BlueprintCallable)
-	float GetIsRun();
+	bool GetIsRun();
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool IsPlayer();
 
 protected:
 

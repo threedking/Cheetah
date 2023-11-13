@@ -8,7 +8,7 @@
 
 ACSGAIController::ACSGAIController()
 {
-    CSGAIPerceptionComponent = this->CreateDefaultSubobject<UCSGAIPerceptionComponent>("CSG AI Perception Component");
+    CSGAIPerceptionComponent = CreateDefaultSubobject<UCSGAIPerceptionComponent>("CSG AI Perception Component");
     SetPerceptionComponent(*CSGAIPerceptionComponent);
 }
 

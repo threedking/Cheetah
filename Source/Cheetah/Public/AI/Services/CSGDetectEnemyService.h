@@ -6,6 +6,8 @@
 #include "BehaviorTree/BTService.h"
 #include "CSGDetectEnemyService.generated.h"
 
+class UCSGAIPerceptionComponent;
+
 UCLASS()
 class CHEETAH_API UCSGDetectEnemyService : public UBTService
 {

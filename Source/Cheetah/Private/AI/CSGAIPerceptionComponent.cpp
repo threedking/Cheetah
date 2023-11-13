@@ -5,6 +5,7 @@
 
 #include "CSGBaseCharacter.h"
 #include "Perception/AISense_Sight.h"
+#include "Perception/AISense_Hearing.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "AI/CSGAICharacter.h"
@@ -18,30 +19,55 @@ void UCSGAIPerceptionComponent::PostInitProperties()
     OnTargetPerceptionInfoUpdated.AddDynamic(this, &UCSGAIPerceptionComponent::PerceptionUpdated);
 }
 
-ACSGBaseCharacter* UCSGAIPerceptionComponent::GetEnemy()
+TObjectPtr<ACSGBaseCharacter> UCSGAIPerceptionComponent::GetEnemy()
 {
     return Player;
 }
 
 void UCSGAIPerceptionComponent::PerceptionUpdated(const FActorPerceptionUpdateInfo& UpdateInfo)
 {
-    if (!UpdateInfo.Target.IsValid()) return;
+    if (UpdateInfo.Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
+    {
+        if (!UpdateInfo.Target.IsValid()) return;
 
-    ACSGBaseCharacter* Character = Cast<ACSGBaseCharacter>(UpdateInfo.Target.Get());
-    if (!Character) return;
+        ACSGBaseCharacter* Character = Cast<ACSGBaseCharacter>(UpdateInfo.Target.Get());
+        if (!Character || !Character->IsPlayer()) return;
 
-    if (UpdateInfo.Stimulus.WasSuccessfullySensed())
-    {    
-        if (!Player)
+        if (UpdateInfo.Stimulus.WasSuccessfullySensed())
         {
-            Player = Character;
+            if (!Player)
+            {
+                Player = Character;
+            }
         }
-    }else {
-        if (Player)
+        else
         {
-            Player = nullptr;
+            if (Player)
+            {
+                Player = nullptr;
+            }
         }
     }
+    else if (UpdateInfo.Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
+    {
+        if (UpdateInfo.Stimulus.WasSuccessfullySensed())
+        {
+            SuspiciousLocation = UpdateInfo.Stimulus.StimulusLocation;
+            IsHasSuspiciousLocation = true;
+        }
+    }
+}
+
+bool UCSGAIPerceptionComponent::GetSuspiciousLocation(FVector& OutSuspiciousLocation)
+{
+    if (IsHasSuspiciousLocation)
+    {
+        OutSuspiciousLocation = SuspiciousLocation;
+        IsHasSuspiciousLocation = false;
+        return true;
+    }
+
+    return false;
 }
 
 float UCSGAIPerceptionComponent::CalculateEnemyDetectionLevel()

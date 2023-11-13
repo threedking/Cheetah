@@ -27,12 +27,22 @@ void UCSGDetectEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 
     UCSGAIPerceptionComponent* PerceptionComponent = AIController->FindComponentByClass<UCSGAIPerceptionComponent>();
     if (!PerceptionComponent) return;
-
+    
     uint8 Moodu8 = Blackboard->GetValueAsEnum(Mood.SelectedKeyName);
     EAIMood MoodEnum = static_cast<EAIMood>(Moodu8);
 
     float EnemyDetectionLevel = PerceptionComponent->CalculateEnemyDetectionLevel();
     bool IsSeeEnemy = !FMath::IsNearlyZero(EnemyDetectionLevel);
+
+    FVector SuspiciousLocation = FVector::Zero();
+    if (PerceptionComponent->GetSuspiciousLocation(SuspiciousLocation))
+    {
+        if (MoodEnum != EAIMood::Angry)
+        {
+            Blackboard->SetValueAsEnum(Mood.SelectedKeyName, static_cast<uint8>(EAIMood::Suspicious));
+        }
+        Blackboard->SetValueAsVector(Suspiciouslocation.SelectedKeyName, SuspiciousLocation);
+    }
 
     if (!IsSeeEnemy)
     {
