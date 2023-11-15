@@ -33,6 +33,7 @@ void UCSGAIPerceptionComponent::PerceptionUpdated(const FActorPerceptionUpdateIn
         ACSGBaseCharacter* Character = Cast<ACSGBaseCharacter>(UpdateInfo.Target.Get());
         if (!Character || !Character->IsPlayer()) return;
 
+        //PerceptionComponent just register Player in view cone and not responsible for detection
         if (UpdateInfo.Stimulus.WasSuccessfullySensed())
         {
             if (!Player)

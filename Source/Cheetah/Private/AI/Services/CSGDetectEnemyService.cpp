@@ -34,6 +34,10 @@ void UCSGDetectEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
     float EnemyDetectionLevel = PerceptionComponent->CalculateEnemyDetectionLevel();
     bool IsSeeEnemy = !FMath::IsNearlyZero(EnemyDetectionLevel);
 
+    /*
+    Go to suspicious mood if PerceptionComponent detected suspicious activity(heard something), 
+    but only if we are not angry(attacking or searching enemy)
+    */
     FVector SuspiciousLocation = FVector::Zero();
     if (PerceptionComponent->GetSuspiciousLocation(SuspiciousLocation))
     {
@@ -49,6 +53,10 @@ void UCSGDetectEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
         ACSGBaseCharacter* SuspiciousCharacter = Cast<ACSGBaseCharacter>(Blackboard->GetValueAsObject(SuspiciousActor.SelectedKeyName));
         ACSGBaseCharacter* EnemyCharacter = Cast<ACSGBaseCharacter>(Blackboard->GetValueAsObject(EnemyActor.SelectedKeyName));
 
+        /*
+        If we don't see the enemy now, but have his value in Blackboard, 
+        then we have just lost sight of him and have to notice his last location as suspicious
+        */
         if ((MoodEnum == EAIMood::Suspicious && SuspiciousCharacter) ||
             (MoodEnum == EAIMood::Angry && EnemyCharacter))
         {
@@ -66,6 +74,10 @@ void UCSGDetectEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
     ACSGAICharacter* AICharacter = Cast<ACSGAICharacter>(AIController->GetPawn());
     if (!AICharacter) return;
 
+    /*
+    Adding a EnemyDetectionLevel to specific awareness.
+    We change the mood when awareness reach 1, depending on the current mood and notify AI about the player
+    */
     switch (MoodEnum)
     {
     case EAIMood::Calm:

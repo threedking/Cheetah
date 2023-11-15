@@ -21,15 +21,19 @@ public:
 	void AddObservingLightSource(ACSGBaseCalculableLightSource* LightSource);
 	void RemoveObservingLightSource(ACSGBaseCalculableLightSource* LightSource);
 
+	/** Calculate and get Illumination level by Directional Light */
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	float GetIlluminationByGlobalLighth();
 
+	/** Calculate and get Illumination level by all ACSGBaseCalculableLightSource objects from LightSources array*/
 	UFUNCTION(BlueprintCallable)
 	float GetIlluminationByLightSources();
 
+	/** Calculate and get Illumination level by Directional Light and all LightSources */
 	UFUNCTION(BlueprintCallable)
 	float GetFullLightIllumination();
 
+	/** Socket names of important bones for illumination calculation */
 	UFUNCTION(BlueprintCallable)
 	const TArray<FName>& GetLightSocketNames();
 

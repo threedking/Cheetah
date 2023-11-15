@@ -22,6 +22,7 @@ float ACSGBaseCharacter::GetFullLightIllumination()
 {
     return IsInCover ? 0.f : FMath::Clamp(GetIlluminationByLightSources() + GetIlluminationByGlobalLighth(), 0.f, 1.f);
 }
+
 float ACSGBaseCharacter::GetIlluminationByLightSources()
 {
     float IlluminationLevel = 0.f;

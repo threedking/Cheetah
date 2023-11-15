@@ -8,6 +8,10 @@
 
 class UCSGAIPerceptionComponent;
 
+/**
+* Mood is main AI state, that define bot behavior (like what to do noticing player or suspicion event)
+* Mood can be observed by player as clue of bot's plans
+*/
 UENUM(BlueprintType)
 enum class EAIMood : uint8
 {

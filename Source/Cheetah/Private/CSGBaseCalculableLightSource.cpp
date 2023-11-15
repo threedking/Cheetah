@@ -55,8 +55,9 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
 {
     if (!GetWorld() || !Target) return 0.f;
 
-    float IlluminationLevel = 0.f;
+    float IlluminationLevel = 0.f; // Resulting value
 
+    float IlluminationLevelByDistance = 0.f;
     float IlluminationLevelByViewAngle = 0.f;
     float IlluminationLevelByViewAngleCoeff = 0.f;
 
@@ -65,7 +66,10 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
     CollisionParams.AddIgnoredActor(this);
 
     const TArray<FVector> ImportantBonesLocation = Target->GetImportantBonesLocation();
-
+    /*
+    The illumination level consists of the sum of the illumination of the important bones
+    Bone is illuminated if the LineTrace from the LightSource reaches it, it's close enough and inside of view cone
+    */
     for (FVector ImportantBoneLocation : ImportantBonesLocation)
     {
         if (GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), ImportantBoneLocation, ECollisionChannel::ECC_Visibility, CollisionParams))
@@ -73,20 +77,32 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
             AActor* HitedActor = HitResult.GetActor();
             if (HitedActor == Target)
             {
+                // Angle between LightSource straight direction and direction to the bone
                 float Angle = FMath::RadiansToDegrees(
                     FMath::Acos(
                         FVector::DotProduct(
                             GetActorForwardVector(), (HitResult.Location - GetActorLocation()).GetSafeNormal())));
                 if (Angle <= ViewAngle / 2.f && HitResult.Distance <= EdgeCollisionComponent->GetUnscaledSphereRadius())
                 {
+                    //Each bone adds its part to the total illumination level
                     float IlluminationLevelDelta = 1.f / ImportantBonesLocation.Num();
                     
+                    /*
+                    If IlluminationIsConst is true, distance and angle to the bone doesn't matter 
+                    and illumination level of this bone is maximum
+                    */                    
                     if (!IlluminationIsConst && ViewAngleToCoeffCurve && DistanceToCoeffCurve &&
                         EdgeCollisionComponent->GetUnscaledSphereRadius() > 0.0f && ViewAngle > 0.0f)
                     {
+                        //Calculating the distance coefficient, using curve to change the linear dependence
                         float DistanceCoeff = DistanceToCoeffCurve->GetFloatValue(HitResult.Distance / EdgeCollisionComponent->GetUnscaledSphereRadius());
                         IlluminationLevelDelta *= DistanceCoeff;
 
+                        /*
+                        Calculating the angle coefficient, using curve to change the linear dependence
+                        The total illumination level by angle gets from best variant
+                        Inverse linear dependence on distance is taken as a coefficient for illumination level by angle 
+                        */
                         float AngleDistanceCoeff = ViewAngleToCoeffCurve->GetFloatValue(Angle / (ViewAngle / 2.f));
                         if (AngleDistanceCoeff > IlluminationLevelByViewAngle)
                         {
@@ -94,7 +110,7 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
                             IlluminationLevelByViewAngleCoeff = 1.f - DistanceCoeff;
                         }
                     }
-                    IlluminationLevel += IlluminationLevelDelta;
+                    IlluminationLevelByDistance += IlluminationLevelDelta;
 
                     if (Target->IsDrawDebug())
                     {
@@ -105,9 +121,14 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
         }
     }
 
+    /*
+    Resulting Illumination Level as arithmetic average between
+    product of Illumination by distance and Illumination by view angle with Illumination by distance, taking into account their coefficients
+    So illumination level by angle has inverse linear dependence on distance and resulting Illumination has linear dependence on distance
+    */
     if (!IlluminationIsConst)
     {
-        IlluminationLevel = ((IlluminationLevel * IlluminationLevelByViewAngle) * IlluminationLevelByViewAngleCoeff + IlluminationLevel) / (1.f + IlluminationLevelByViewAngleCoeff);
+        IlluminationLevel = ((IlluminationLevelByDistance * IlluminationLevelByViewAngle) * IlluminationLevelByViewAngleCoeff + IlluminationLevelByDistance) / (1.f + IlluminationLevelByViewAngleCoeff);
     }
 
     return FMath::Clamp(IlluminationLevel, 0.f, 1.f);
