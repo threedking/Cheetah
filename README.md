@@ -3,12 +3,10 @@ Stealth-action game prototype
 
 This project is inspired by: "Tom Clancy's Splinter Cell", "Hitman", "Mark of the Ninja", "Tenchu".
 
-Special thanks to Martin Walsh
-
 Objective - is to reach final location in the level that marked green color
-Sneak past all enemies like a ghost or stealthily kill everyone on your way like a cheetah
+Sneak past all enemies like a ghost or stealthily kill everyone on your way like a ~~panther~~ cheetah
 You have a gun, but you can't kill enemies with it. You can only use the gun to destroy lamps that help enemies spot you.
-In addition to lamps, enemies have personal flashlights, so try to avoid coming face to face with enemies as they will easily defeat you in direct confrontation
+In addition to lamps, enemies have personal flashlights, so try to avoid coming face to face with enemies as they will easily defeat you in direct confrontation.
 
 Light sources such as lamps and enemy flashlights increase your illumination level. 
 The amount of illumination depends on how close you are to the light source and how close you are to the direct direction of the light source.
@@ -23,7 +21,7 @@ You can lower the sun completely or create shadows from objects in the desired d
 The overall level of your illumination can be observed by the brightness of the "Unreal" symbol on the main character's chest and by a small light sensor on the back.
 
 Enemies will not be able to see you if you are completely in the shadows.
-In addition to lighting, the detection of you by enemies is also affected by the distance between you, your distance from the enemy’s straight line of sight, your movement speed and whether you are crouched or not.
+In addition to lighting, the detection of you by enemies is also affected by the distance between you, your distance from the enemyâ€™s straight line of sight, your movement speed and whether you are crouched or not.
 The effect of each parameter can be adjusted independently.
 There is also an overall detection coefficient, which is used as the difficulty of the game.
 
@@ -43,13 +41,15 @@ Besides lamps, you can also distract enemies by throwing a rock. Unfortunately, 
 In addition to the lamps and rock, you can also make noise if you run. Enemies may not see you in the dark and through the wall, but they will hear you, so be careful!
 
 Controls:
-WASD			Move
-Space			Jump
-Mouse			Look
-Ctrl			Crouch
-Shift			Run
-Mouse Wheel		Zoom
-Mouse RBT		Aim
-Mouse LBT		Shoot
-F				Kill
-G				Throw
+*WASD						Move
+*Space					Jump
+*Mouse					Look
+*Ctrl						Crouch
+*Shift					Run
+*Mouse Wheel		Zoom
+*Mouse RBT			Aim
+*Mouse LBT			Shoot
+*F							Kill
+*G							Throw
+
+### *Special thanks to Martin Walsh*
