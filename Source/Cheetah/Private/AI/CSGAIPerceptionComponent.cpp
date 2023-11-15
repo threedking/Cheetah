@@ -19,9 +19,9 @@ void UCSGAIPerceptionComponent::PostInitProperties()
     OnTargetPerceptionInfoUpdated.AddDynamic(this, &UCSGAIPerceptionComponent::PerceptionUpdated);
 }
 
-TObjectPtr<ACSGBaseCharacter> UCSGAIPerceptionComponent::GetEnemy()
+ACSGBaseCharacter* UCSGAIPerceptionComponent::GetEnemy()
 {
-    return Player;
+    return Player.Get();
 }
 
 void UCSGAIPerceptionComponent::PerceptionUpdated(const FActorPerceptionUpdateInfo& UpdateInfo)

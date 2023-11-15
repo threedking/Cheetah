@@ -32,11 +32,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetAngryAwareness();
 
-	TObjectPtr<ACSGBaseCharacter> GetEnemy();
+	ACSGBaseCharacter* GetEnemy();
 
 	bool GetSuspiciousLocation(FVector& OutSuspiciousLocation);
 
 protected:
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly)
 	TObjectPtr<ACSGBaseCharacter> Player;
 
 	FVector SuspiciousLocation;
