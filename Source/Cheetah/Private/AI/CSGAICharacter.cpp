@@ -80,7 +80,7 @@ float ACSGAICharacter::GetEnemyDetectionLevel(ACSGBaseCharacter* EnemyCharacter)
 
     if (FMath::IsNearlyZero(DetectionByIllumination) || FMath::IsNearlyZero(DetectionByDistance)) return 0.f;
 
-    float DetectionByStance = EnemyCharacter->bIsCrouched ? 1.f : 0.f;
+    float DetectionByStance = EnemyCharacter->bIsCrouched ? 0.f : 1.f;
     float DetectionByMotion = FMath::IsNearlyZero(EnemyMovementComponent->GetMaxSpeed()) ? 0.f : 
         FMath::Clamp(EnemyMovementComponent->Velocity.Size() / EnemyMovementComponent->GetMaxSpeed(), 0.f, 1.f);
     

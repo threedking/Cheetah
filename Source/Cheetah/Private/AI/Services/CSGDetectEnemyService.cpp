@@ -96,6 +96,10 @@ void UCSGDetectEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
             Blackboard->SetValueAsEnum(Mood.SelectedKeyName, static_cast<uint8>(EAIMood::Angry));
             Blackboard->SetValueAsObject(EnemyActor.SelectedKeyName, Player);
             AICharacter->SetIsRun(true);
+        }else{
+            Blackboard->SetValueAsEnum(Mood.SelectedKeyName, static_cast<uint8>(EAIMood::Suspicious));
+            Blackboard->SetValueAsObject(SuspiciousActor.SelectedKeyName, Player);
+            AICharacter->SetIsRun(false);
         }
         break;
     case EAIMood::Angry:
