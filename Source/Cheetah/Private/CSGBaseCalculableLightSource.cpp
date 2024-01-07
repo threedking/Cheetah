@@ -58,8 +58,8 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
     float IlluminationLevel = 0.f; // Resulting value
 
     float IlluminationLevelByDistance = 0.f;
-    float IlluminationLevelByViewAngle = 0.f;
-    float IlluminationLevelByViewAngleCoeff = 0.f;
+    float IlluminationLevelByViewAngle = IlluminationIsConst ? 1.0f : 0.f;
+    float IlluminationLevelByViewAngleCoeff = IlluminationIsConst ? 1.0f : 0.f;
 
     FHitResult HitResult;
     FCollisionQueryParams CollisionParams;
@@ -126,10 +126,7 @@ float ACSGBaseCalculableLightSource::GetIlluminationLevel(ACSGBaseCharacter* Tar
     product of Illumination by distance and Illumination by view angle with Illumination by distance, taking into account their coefficients
     So illumination level by angle has inverse linear dependence on distance and resulting Illumination has linear dependence on distance
     */
-    if (!IlluminationIsConst)
-    {
-        IlluminationLevel = ((IlluminationLevelByDistance * IlluminationLevelByViewAngle) * IlluminationLevelByViewAngleCoeff + IlluminationLevelByDistance) / (1.f + IlluminationLevelByViewAngleCoeff);
-    }
+    IlluminationLevel = ((IlluminationLevelByDistance * IlluminationLevelByViewAngle) * IlluminationLevelByViewAngleCoeff + IlluminationLevelByDistance) / (1.f + IlluminationLevelByViewAngleCoeff);
 
     return FMath::Clamp(IlluminationLevel, 0.f, 1.f);
 }
