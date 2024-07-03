@@ -18,7 +18,7 @@ void UIlluminationAnalyzerComponent::BeginPlay()
 
 	OnIlluminationCalculated.BindUObject(this, &UIlluminationAnalyzerComponent::UpdateIlluminationLevel);
 
-	CalculateIlluminationLevelAsync();
+	//CalculateIlluminationLevelAsync();
 }
 
 void UIlluminationAnalyzerComponent::UpdateIlluminationLevel(float NewIlluminationLevel)
