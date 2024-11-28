@@ -8,8 +8,10 @@ public class CheetahEditorTarget : TargetRules
 	public CheetahEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
+        CppStandard = CppStandardVersion.Cpp20;
+        DefaultBuildSettings = BuildSettingsVersion.V5;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_5;
 
-		ExtraModuleNames.AddRange( new string[] { "Cheetah" } );
+        ExtraModuleNames.AddRange( new string[] { "Cheetah" } );
 	}
 }
